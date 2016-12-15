@@ -5,8 +5,11 @@ x make it blackhole the website
 x make it not blackhole an already managed website
 x make it unblackhole a site
 x make it re-blackhole a site
-* refactor the two methods, too much shared
-* make it unblackhole a site for 5 minutes.
+x refactor the two methods, too much shared
+x make it unblackhole a site for (5) minutes.
+x make it catch ctl-c
+* make it unblackhole until tomorrow
+* make it unblackhole all
 * update readme
 
 
@@ -15,7 +18,7 @@ BACKLOG
 * write a dotfile so that when moving to a new machine I can bring it all along
 	* ugh this probably makes concurrancy way more real.
 	* might be nice because we can just rewrite the whole file every time instead of doing parts?
-
+* don't do two reads everytime
 
 BUGS
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
@@ -24,11 +27,12 @@ BUGS
 maybe there should be a switch to enable, ideally enable for a set time.
 usage: sudo webnull --enable (-e) facebook
 usage: sudo webnull --enable-all (-a)
-usage: sudo webnull -e -t 30 facebook
+usage: sudo webnull -et 30 facebook
 
 default is 5 minutes
 -t in minutes
---tomorrow ? -- enable until tomorrow
+--tomorrow -m ? -- enable until tomorrow
+-am == all until tomorrow
 
 * we should only have 1 waiting at a time, so we write when we do this.
 * file locking? possible?
