@@ -4,11 +4,36 @@ import argparse
 import urlparse
 import re
 
-SHIBBOLETH = "## webnull will only write below this line ##"
-HOSTFILE_PATH = "/etc/hosts"
-
 HOST_MATCHER = r'^([^#\n].*{0})'
 COMMENTED_MATCHER = r'^#\s(.*{0})'
+
+class ManagedHostfile:
+    SHIBBOLETH = "## webnull will only write below this line ##"
+    HOSTFILE_PATH = "/etc/hosts"
+
+    def _head_and_tail(self):
+        with open(self.HOSTFILE_PATH, "r") as hostfile:
+            hosts = hostfile.read()
+            parts = hosts.split(self.SHIBBOLETH)
+            assert(len(parts) < 3)
+            assert(len(parts) > 0)
+
+            preroll = parts[0]
+            managed = ""
+            if len(parts) == 2:
+                managed = parts[1]
+
+            return preroll, managed
+
+    def current_body(self):
+        _, body = self._head_and_tail()
+        return body
+
+    def write_body(self, new_body):
+        head, _ = self._head_and_tail()
+        with open(self.HOSTFILE_PATH, "w") as hostfile:
+            hostfile.write(head + self.SHIBBOLETH + new_body)
+
 
 def arg_parser():
     parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
@@ -33,16 +58,8 @@ def nullify_site(sitename):
 
     hostname = parse_hostname(sitename)
 
-    hosts = ""
-    with open(HOSTFILE_PATH, "r") as hostfile:
-        hosts = hostfile.read()
-
-    parts = hosts.split(SHIBBOLETH)
-    preroll = parts[0]
-    managed = ""
-    assert(len(parts) < 3)
-    if len(parts) == 2:
-        managed = parts[1]
+    hostfile = ManagedHostfile()
+    managed = hostfile.current_body()
 
     null_matcher = HOST_MATCHER.format(hostname)
     neuter_matcher = COMMENTED_MATCHER.format(hostname)
@@ -62,30 +79,23 @@ def nullify_site(sitename):
             for www in ["", "www."]:
                 managed += (null + www + hostname + "\n")
 
-    with open(HOSTFILE_PATH, "w") as hostfile:
-        hostfile.write(preroll + SHIBBOLETH + managed)
+    hostfile.write_body(managed)
 
 def unblock_site(sitename):
 
     hostname = parse_hostname(sitename)
 
-    hosts = ""
-    with open(HOSTFILE_PATH, "r") as hostfile:
-        hosts = hostfile.read()
+    hostfile = ManagedHostfile()
+    managed = hostfile.current_body()
 
-    parts = hosts.split(SHIBBOLETH)
-    if len(parts) != 2:
+    if managed == "":
         print "Your hostsfile is not managed by webnull, we won't change anything"
         exit(1)
     else:
-        preroll = parts[0]
-        managed = parts[1]
-
         null_matcher = HOST_MATCHER.format(hostname)
         new_managed = re.sub(null_matcher, r'# \1', managed, flags=re.MULTILINE)
 
-        with open(HOSTFILE_PATH, "w") as hostfile:
-            hostfile.write(preroll + SHIBBOLETH + new_managed)
+        hostfile.write_body(new_managed)
 
 
 if __name__ == "__main__":
