@@ -13,8 +13,7 @@ COMMENTED_MATCHER = r'^#\s(.*{0})'
 
 class ManagedHostfile:
     SHIBBOLETH = "## webnull will only write below this line ##"
-    # HOSTFILE_PATH = "/etc/hosts" DEBUG
-    HOSTFILE_PATH = "./fakehosts"
+    HOSTFILE_PATH = "/etc/hosts"
 
     def _head_and_tail(self):
         with open(self.HOSTFILE_PATH, "r") as hostfile:
