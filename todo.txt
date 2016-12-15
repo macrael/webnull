@@ -3,9 +3,7 @@ Webnull
 x make it append the shibboleth on first run
 x make it blackhole the website
 * make it not blackhole an already managed website
-* make it unblackhole for minutes.
-
-
+* make it unblackhole a site for 5 minutes.
 
 
 BACKLOG
@@ -16,15 +14,7 @@ BACKLOG
 
 
 BUGS
-* sometimes, it takes a minute for the website to go away, do I need to kill some daemon or reset some cache or something?
-
-
-A tool for blackholing websites. 
-
-
-usage: sudo webnull http://facebook.com
-		sudo webnull facebook.com
-facebook will no longer be reachable. 
+* sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
 
 
 maybe there should be a switch to enable, ideally enable for a set time.
