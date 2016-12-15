@@ -2,7 +2,7 @@ Webnull
 
 x make it append the shibboleth on first run
 x make it blackhole the website
-* make it not blackhole an already managed website
+x make it not blackhole an already managed website
 * make it unblackhole a site for 5 minutes.
 
 
@@ -24,6 +24,7 @@ usage: sudo webnull -e -t 30 facebook
 
 default is 5 minutes
 -t in minutes
+--tomorrow ? -- enable until tomorrow
 
 * we should only have 1 waiting at a time, so we write when we do this.
 * file locking? possible?

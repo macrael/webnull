@@ -32,8 +32,14 @@ def nullify_site(sitename):
     with open(HOSTFILE_PATH, "r+") as hostfile:
         hosts = hostfile.read()
 
-        if hosts.find(SHIBBOLETH) == -1:
+        shib_loc = hosts.find(SHIBBOLETH)
+        if shib_loc == -1:
             hostfile.write("\n" + SHIBBOLETH + "\n\n")
+        else:
+            host_loc = hosts.find("\t" + sitename + "\n", shib_loc)
+            if host_loc != -1:
+                print hostname + " has already been sent to webnull"
+                exit(0)
 
         ip5null = "127.0.0.1\t"
         ip6null = "::1\t\t"
