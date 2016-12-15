@@ -1,0 +1,40 @@
+Webnull
+
+x make it append the shibboleth on first run
+x make it blackhole the website
+* make it not blackhole an already managed website
+* make it unblackhole for minutes.
+
+
+
+
+BACKLOG
+* make a man page
+* write a dotfile so that when moving to a new machine I can bring it all along
+	* ugh this probably makes concurrancy way more real.
+	* might be nice because we can just rewrite the whole file every time instead of doing parts?
+
+
+BUGS
+* sometimes, it takes a minute for the website to go away, do I need to kill some daemon or reset some cache or something?
+
+
+A tool for blackholing websites. 
+
+
+usage: sudo webnull http://facebook.com
+		sudo webnull facebook.com
+facebook will no longer be reachable. 
+
+
+maybe there should be a switch to enable, ideally enable for a set time.
+usage: sudo webnull --enable (-e) facebook
+usage: sudo webnull --enable-all (-a)
+usage: sudo webnull -e -t 30 facebook
+
+default is 5 minutes
+-t in minutes
+
+* we should only have 1 waiting at a time, so we write when we do this.
+* file locking? possible?
+* catch ctl-c and reset the file in that case
