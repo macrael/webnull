@@ -7,6 +7,9 @@ import re
 SHIBBOLETH = "## webnull will only write below this line ##"
 HOSTFILE_PATH = "/etc/hosts"
 
+HOST_MATCHER = r'^([^#\n].*{0})'
+COMMENTED_MATCHER = r'^#\s(.*{0})'
+
 def arg_parser():
     parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
     parser.add_argument('sitename', help='The website to be blackholed. Will be stripped down to just the hostname')
@@ -30,31 +33,44 @@ def nullify_site(sitename):
 
     hostname = parse_hostname(sitename)
 
-    with open(HOSTFILE_PATH, "r+") as hostfile:
+    hosts = ""
+    with open(HOSTFILE_PATH, "r") as hostfile:
         hosts = hostfile.read()
 
-        shib_loc = hosts.find(SHIBBOLETH)
-        if shib_loc == -1:
-            hostfile.write("\n" + SHIBBOLETH + "\n\n")
-        else:
-            host_loc = hosts.find("\t" + sitename + "\n", shib_loc)
-            if host_loc != -1:
-                print hostname + " has already been sent to webnull"
-                exit(0)
+    parts = hosts.split(SHIBBOLETH)
+    preroll = parts[0]
+    managed = ""
+    assert(len(parts) < 3)
+    if len(parts) == 2:
+        managed = parts[1]
 
+    null_matcher = HOST_MATCHER.format(hostname)
+    neuter_matcher = COMMENTED_MATCHER.format(hostname)
+    if re.search(null_matcher, managed, flags=re.MULTILINE) != None:
+        # if it's not commented, we ignore it
+        print hostname + " has already been sent to webnull"
+        exit(0)
+    elif re.search(neuter_matcher, managed, flags=re.MULTILINE) != None:
+        # if it's commented, we replace it
+        managed = re.sub(neuter_matcher, r'\1', managed, flags=re.MULTILINE)
+    else:
+        # if it's not there, we write it.
         ip5null = "127.0.0.1\t"
         ip6null = "::1\t\t"
 
         for null in [ip5null, ip6null]:
             for www in ["", "www."]:
-                hostfile.write(null + www + hostname + "\n")
+                managed += (null + www + hostname + "\n")
+
+    with open(HOSTFILE_PATH, "w") as hostfile:
+        hostfile.write(preroll + SHIBBOLETH + managed)
 
 def unblock_site(sitename):
 
     hostname = parse_hostname(sitename)
 
     hosts = ""
-    with open(HOSTFILE_PATH, "r+") as hostfile:
+    with open(HOSTFILE_PATH, "r") as hostfile:
         hosts = hostfile.read()
 
     parts = hosts.split(SHIBBOLETH)
@@ -65,8 +81,8 @@ def unblock_site(sitename):
         preroll = parts[0]
         managed = parts[1]
 
-        null_matcher = r'\n([^#\n].*' + re.escape(hostname) + r')'
-        new_managed = re.sub(null_matcher, r'\n# \1', managed)
+        null_matcher = HOST_MATCHER.format(hostname)
+        new_managed = re.sub(null_matcher, r'# \1', managed, flags=re.MULTILINE)
 
         with open(HOSTFILE_PATH, "w") as hostfile:
             hostfile.write(preroll + SHIBBOLETH + new_managed)

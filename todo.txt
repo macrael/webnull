@@ -4,7 +4,8 @@ x make it append the shibboleth on first run
 x make it blackhole the website
 x make it not blackhole an already managed website
 x make it unblackhole a site
-* make it re-blackhole a site
+x make it re-blackhole a site
+* refactor the two methods, too much shared
 * make it unblackhole a site for 5 minutes.
 
 
