@@ -5,8 +5,7 @@ import urlparse
 import re
 
 SHIBBOLETH = "## webnull will only write below this line ##"
-# HOSTFILE_PATH = "/etc/hosts"
-HOSTFILE_PATH = "./fakehosts"
+HOSTFILE_PATH = "/etc/hosts"
 
 def arg_parser():
     parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
@@ -51,7 +50,7 @@ def nullify_site(sitename):
                 hostfile.write(null + www + hostname + "\n")
 
 def unblock_site(sitename):
-    print "UNBLOCKING"
+
     hostname = parse_hostname(sitename)
 
     hosts = ""
