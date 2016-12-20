@@ -21,6 +21,7 @@ BACKLOG
 * don't do two reads everytime
 
 BUGS
+* webnull www.reddit.com doesn't strip the www. off
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
 
 

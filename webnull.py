@@ -43,7 +43,7 @@ def arg_parser():
     parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
     parser.add_argument('sitename', help='The website to be blackholed. Will be stripped down to just the hostname')
     parser.add_argument('-e', '--enable', action='store_true', help='re-enables access to sitename')
-    parser.add_argument('-t', '--time', help='sets the duration to enable a site for.', default=5, type=int)
+    parser.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes', default=5, type=int)
     return parser
 
 def parse_hostname(sitename):
@@ -56,6 +56,10 @@ def parse_hostname(sitename):
             print "ERROR: Unable to make the provided sitename into a hostname: " + parsed_url.path
             sys.exit(1)
         hostname = match.group(0)
+
+    www_matcher = r'^www\.(.+)'
+    if re.search(www_matcher, hostname) != None:
+        hostname = re.sub(www_matcher, r'\1', hostname)
 
     return hostname
 
