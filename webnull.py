@@ -12,7 +12,7 @@ HOST_MATCHER = r'^([^#\n].*{0})'
 COMMENTED_MATCHER = r'^#\s(.*{0})'
 
 class ManagedHostfile:
-    SHIBBOLETH = "## webnull will only write below this line ##"
+    SHIBBOLETH = "\n## webnull will only write below this line ##\n"
     HOSTFILE_PATH = "/etc/hosts"
 
     def _head_and_tail(self):
