@@ -8,8 +8,8 @@ x make it re-blackhole a site
 x refactor the two methods, too much shared
 x make it unblackhole a site for (5) minutes.
 x make it catch ctl-c
-* make it unblackhole until tomorrow
 * make it unblackhole all
+* make it unblackhole until tomorrow
 * update readme
 
 
@@ -19,13 +19,15 @@ BACKLOG
 	* ugh this probably makes concurrancy way more real.
 	* might be nice because we can just rewrite the whole file every time instead of doing parts?
 * don't do two reads everytime
+* switch from localhost addresses to invalid addresses. 
 
 BUGS
-* webnull www.reddit.com doesn't strip the www. off
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
+    * Seems Safari related. pinging it or trying to open it in Chrome fails. 
+x webnull www.reddit.com doesn't strip the www. off
 
 
-maybe there should be a switch to enable, ideally enable for a set time.
+there should be a switch to enable, ideally enable for a set time.
 usage: sudo webnull --enable (-e) facebook
 usage: sudo webnull --enable-all (-a)
 usage: sudo webnull -et 30 facebook
@@ -38,3 +40,5 @@ default is 5 minutes
 * we should only have 1 waiting at a time, so we write when we do this.
 * file locking? possible?
 * catch ctl-c and reset the file in that case
+
+* how do I solve having two different sites enabled in two different terminals?

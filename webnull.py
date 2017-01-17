@@ -14,6 +14,7 @@ COMMENTED_MATCHER = r'^#\s(.*{0})'
 class ManagedHostfile:
     SHIBBOLETH = "\n## webnull will only write below this line ##\n"
     HOSTFILE_PATH = "/etc/hosts"
+    HOSTFILE_PATH = "dummyhosts"
 
     def _head_and_tail(self):
         with open(self.HOSTFILE_PATH, "r") as hostfile:
@@ -44,6 +45,7 @@ def arg_parser():
     parser.add_argument('sitename', help='The website to be blackholed. Will be stripped down to just the hostname')
     parser.add_argument('-e', '--enable', action='store_true', help='re-enables access to sitename')
     parser.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes', default=5, type=int)
+    parser.add_argument('-a', '--all', action='store_true', help='paired with -e it will enable all sites under webnull control.')
     return parser
 
 def parse_hostname(sitename):
@@ -116,10 +118,21 @@ def reblock_timer(sitename, duration):
     time.sleep(duration * 60)
     nullify_site(sitename)
 
+def enable_all(duration):
+    print("enabling all!")
+
 if __name__ == "__main__":
     args = arg_parser().parse_args()
 
-    if args.enable:
+    if args.all:
+        # if -a is passed, you must have passed -e (or eventually -m)
+        # and sitename must be "ALL" (for now)
+        assert(args.enable)
+        assert(args.sitename == "ALL")
+        
+        enable_all(args.time)
+
+    elif args.enable:
         reblock_timer(args.sitename, args.time)
     else:
         nullify_site(args.sitename)
