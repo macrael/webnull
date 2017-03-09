@@ -8,9 +8,12 @@ x make it re-blackhole a site
 x refactor the two methods, too much shared
 x make it unblackhole a site for (5) minutes.
 x make it catch ctl-c
+x switch to the local dummy hosts when you pass an enviornment variable
 * make it unblackhole all
 * make it unblackhole until tomorrow
 * update readme
+* If you -e a pattern that matches nothing, print an error and don't time
+* list the patterns that actually matched
 
 
 BACKLOG

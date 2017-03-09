@@ -1,22 +1,23 @@
 #!/usr/bin/env python
 
 import argparse
-import urlparse
+import datetime
+import os
 import re
 import signal
 import sys
 import time
-import datetime
+import urlparse
 
 HOST_MATCHER = r'^([^#\n].*{0})'
 COMMENTED_MATCHER = r'^#\s(.*{0})'
 
 class ManagedHostfile:
     SHIBBOLETH = "\n## webnull will only write below this line ##\n"
-    HOSTFILE_PATH = "/etc/hosts"
-    HOSTFILE_PATH = "dummyhosts"
+    HOSTFILE_PATH = "/etc/hosts" if "DEV_MODE" not in os.environ else "dummyhosts"
 
     def _head_and_tail(self):
+        print self.HOSTFILE_PATH
         with open(self.HOSTFILE_PATH, "r") as hostfile:
             hosts = hostfile.read()
             parts = hosts.split(self.SHIBBOLETH)
@@ -120,9 +121,13 @@ def reblock_timer(sitename, duration):
 
 def enable_all(duration):
     print("enabling all!")
+    print ManagedHostfile().current_body()
 
 if __name__ == "__main__":
     args = arg_parser().parse_args()
+
+    if "DEV_MODE" in os.environ:
+        print "Running in Development Mode"
 
     if args.all:
         # if -a is passed, you must have passed -e (or eventually -m)
