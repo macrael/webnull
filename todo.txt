@@ -12,6 +12,7 @@ x switch to the local dummy hosts when you pass an enviornment variable
 x make it unblackhole all
 x switch to command based UI
 x update readme
+* Add tests
 * refactor, way too much shared code again.
 * make it unblackhole until tomorrow
 * If you -e a pattern that matches nothing, print an error and don't time
@@ -20,27 +21,32 @@ x update readme
     * or do I want to go whole hog and let the sitename be a pattern? I'm injecting it into one...
 * don't add www if there's already a subdomain
 * could add short command names "d" and "a"
-* write tests. Should be pretty straightforward. intput, output, etc. 
-    * might need to be able to specify hostfile location somehow. 
+* write tests. Should be pretty straightforward. intput, output, etc.
+    * might need to be able to specify hostfile location somehow.
 
 BACKLOG
+* make it a proper package
+    * virtualenv
+    * pip file
+    * requirements.txt
+    * setup.py?
 * make a man page
 * write a dotfile so that when moving to a new machine I can bring it all along
 	* ugh this probably makes concurrancy way more real.
 	* might be nice because we can just rewrite the whole file every time instead of doing parts?
 * don't do two reads everytime
-    * maybe store the read in local variables. 
-* switch from localhost addresses to invalid addresses. 
+    * maybe store the read in local variables.
+* switch from localhost addresses to invalid addresses.
 * make not using sudo print a nicer error
 
 BUGS
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
-    * Seems Safari related. pinging it or trying to open it in Chrome fails. 
+    * Seems Safari related. pinging it or trying to open it in Chrome fails.
 x webnull www.reddit.com doesn't strip the www. off
 
 UI
 ---
-Comand based. 
+Command based.
 
 rn: deny/allow
 
