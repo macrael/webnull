@@ -127,20 +127,20 @@ def reblock_timer(sitename, duration, all=False):
     else:
         unblock_site(sitename)
 
-    def sigint_handler(signal, frame):
+    def cleanup():
         if all:
             reblock_all()
         else:
             nullify_site(sitename)
+
+    def sigint_handler(signal, frame):
+        cleanup()
         sys.exit(0)
     signal.signal(signal.SIGINT, sigint_handler)
 
     print sitename + ' is enabled until ' + str(datetime.datetime.now() + datetime.timedelta(minutes=duration))
     time.sleep(duration * 60)
-    if all:
-        reblock_all()
-    else:
-        nullify_site(sitename)
+    cleanup()
 
 def enable_all(duration):
     reblock_timer('ALL_ARE_ENABLED', duration, all=True)

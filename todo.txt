@@ -11,12 +11,13 @@ x make it catch ctl-c
 x switch to the local dummy hosts when you pass an enviornment variable
 x make it unblackhole all
 x switch to command based UI
+x update readme
 * refactor, way too much shared code again.
 * make it unblackhole until tomorrow
-* update readme
 * If you -e a pattern that matches nothing, print an error and don't time
 * list the patterns that actually matched
 * make sure that .'s in the search name aren't being used as . in the re
+    * or do I want to go whole hog and let the sitename be a pattern? I'm injecting it into one...
 * don't add www if there's already a subdomain
 * could add short command names "d" and "a"
 * write tests. Should be pretty straightforward. intput, output, etc. 
@@ -30,6 +31,7 @@ BACKLOG
 * don't do two reads everytime
     * maybe store the read in local variables. 
 * switch from localhost addresses to invalid addresses. 
+* make not using sudo print a nicer error
 
 BUGS
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
