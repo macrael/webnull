@@ -14,7 +14,7 @@ x switch to the local dummy hosts when you pass an enviornment variable
 * update readme
 * If you -e a pattern that matches nothing, print an error and don't time
 * list the patterns that actually matched
-
+* don't add www if there's already a subdomain
 
 BACKLOG
 * make a man page

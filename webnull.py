@@ -17,7 +17,6 @@ class ManagedHostfile:
     HOSTFILE_PATH = "/etc/hosts" if "DEV_MODE" not in os.environ else "dummyhosts"
 
     def _head_and_tail(self):
-        print self.HOSTFILE_PATH
         with open(self.HOSTFILE_PATH, "r") as hostfile:
             hosts = hostfile.read()
             parts = hosts.split(self.SHIBBOLETH)
@@ -107,21 +106,53 @@ def unblock_site(sitename):
 
         hostfile.write_body(new_managed)
 
-def reblock_timer(sitename, duration):
-    unblock_site(sitename)
+def unblock_all():
+    hostfile = ManagedHostfile()
+    managed = hostfile.current_body()
+
+    if managed == "":
+        print "Your hostsfile is not managed by webnull, we won't change anything"
+        sys.exit(1)
+    else: 
+        new_managed = re.sub(r'^(.+)', r'# \1', managed, flags=re.MULTILINE)
+
+        hostfile.write_body(new_managed)
+
+def reblock_all():
+    hostfile = ManagedHostfile()
+    managed = hostfile.current_body()
+
+    if managed == "":
+        print "Your hostsfile is not managed by webnull, we won't change anything"
+        sys.exit(1)
+    else: 
+        new_managed = re.sub(r'^#\s(.+)', r'\1', managed, flags=re.MULTILINE)
+
+        hostfile.write_body(new_managed)
+
+def reblock_timer(sitename, duration, all=False):
+    if all:
+        unblock_all()
+    else:
+        unblock_site(sitename)
 
     def sigint_handler(signal, frame):
-        nullify_site(sitename)
+        if all:
+            reblock_all()
+        else:
+            nullify_site(sitename)
         sys.exit(0)
     signal.signal(signal.SIGINT, sigint_handler)
 
     print sitename + " is enabled until " + str(datetime.datetime.now() + datetime.timedelta(minutes=duration))
     time.sleep(duration * 60)
-    nullify_site(sitename)
+    if all:
+        reblock_all()
+    else:
+        nullify_site(sitename)
 
 def enable_all(duration):
-    print("enabling all!")
-    print ManagedHostfile().current_body()
+    reblock_timer("ALL_ARE_ENABLED", duration, all=True)
 
 if __name__ == "__main__":
     args = arg_parser().parse_args()
