@@ -166,7 +166,7 @@ def arg_parser():
     allow = commands.add_parser('allow', description='Allow access to a blackholed site for a spell.', help='Allow access to a blackholed site for a spell.')
     allow.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes.', default=5, type=int)
     all_or_one = allow.add_mutually_exclusive_group(required=True)
-    all_or_one.add_argument('-a', '--all', action='store_true', help='All blackholed hostnames will be granted access instead of matching sitename.')
+    all_or_one.add_argument('-a', '--all', action='store_true', help='All blackholed hostnames will be granted access instead of a matching sitename.')
     all_or_one.add_argument('sitename', help='All blackholed hostnames that contain this string will be temporarlly granted access.', nargs='?')
     allow.set_defaults(func=allow_site)
 
