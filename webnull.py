@@ -39,15 +39,6 @@ class ManagedHostfile:
         with open(self.HOSTFILE_PATH, "w") as hostfile:
             hostfile.write(head + self.SHIBBOLETH + new_body)
 
-
-def arg_parser():
-    parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
-    parser.add_argument('sitename', help='The website to be blackholed. Will be stripped down to just the hostname')
-    parser.add_argument('-e', '--enable', action='store_true', help='re-enables access to sitename')
-    parser.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes', default=5, type=int)
-    parser.add_argument('-a', '--all', action='store_true', help='paired with -e it will enable all sites under webnull control.')
-    return parser
-
 def parse_hostname(sitename):
     parsed_url = urlparse.urlparse(sitename)
     hostname = parsed_url.netloc
@@ -154,21 +145,36 @@ def reblock_timer(sitename, duration, all=False):
 def enable_all(duration):
     reblock_timer("ALL_ARE_ENABLED", duration, all=True)
 
-if __name__ == "__main__":
-    args = arg_parser().parse_args()
 
+def deny_site(args):
+    nullify_site(args.sitename)
+
+def allow_site(args):
+    if args.all:
+        enable_all(args.time)
+    else:
+        reblock_timer(args.sitename, args.time)
+
+def arg_parser():
+    parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
+    commands = parser.add_subparsers(title='commands', metavar='')
+
+    deny = commands.add_parser('deny', description='Add a site to the black hole. It will become unreachable.', help='Add a site to the black hole. It will become unreachable.')
+    deny.add_argument('sitename', help='The website to be blackholed. A URL will be stripped down correctly.')
+    deny.set_defaults(func=deny_site)
+
+    allow = commands.add_parser('allow', description='Allow access to a blackholed site for a spell.', help='Allow access to a blackholed site for a spell.')
+    allow.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes.', default=5, type=int)
+    all_or_one = allow.add_mutually_exclusive_group(required=True)
+    all_or_one.add_argument('-a', '--all', action='store_true', help='All blackholed hostnames will be granted access instead of matching sitename.')
+    all_or_one.add_argument('sitename', help='All blackholed hostnames that contain this string will be temporarlly granted access.', nargs='?')
+    allow.set_defaults(func=allow_site)
+
+    return parser
+
+if __name__ == "__main__":
     if "DEV_MODE" in os.environ:
         print "Running in Development Mode"
 
-    if args.all:
-        # if -a is passed, you must have passed -e (or eventually -m)
-        # and sitename must be "ALL" (for now)
-        assert(args.enable)
-        assert(args.sitename == "ALL")
-        
-        enable_all(args.time)
-
-    elif args.enable:
-        reblock_timer(args.sitename, args.time)
-    else:
-        nullify_site(args.sitename)
+    args = arg_parser().parse_args()
+    args.func(args)

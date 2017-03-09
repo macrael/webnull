@@ -9,12 +9,18 @@ x refactor the two methods, too much shared
 x make it unblackhole a site for (5) minutes.
 x make it catch ctl-c
 x switch to the local dummy hosts when you pass an enviornment variable
-* make it unblackhole all
+x make it unblackhole all
+x switch to command based UI
+* refactor, way too much shared code again.
 * make it unblackhole until tomorrow
 * update readme
 * If you -e a pattern that matches nothing, print an error and don't time
 * list the patterns that actually matched
+* make sure that .'s in the search name aren't being used as . in the re
 * don't add www if there's already a subdomain
+* could add short command names "d" and "a"
+* write tests. Should be pretty straightforward. intput, output, etc. 
+    * might need to be able to specify hostfile location somehow. 
 
 BACKLOG
 * make a man page
@@ -22,6 +28,7 @@ BACKLOG
 	* ugh this probably makes concurrancy way more real.
 	* might be nice because we can just rewrite the whole file every time instead of doing parts?
 * don't do two reads everytime
+    * maybe store the read in local variables. 
 * switch from localhost addresses to invalid addresses. 
 
 BUGS
@@ -29,11 +36,32 @@ BUGS
     * Seems Safari related. pinging it or trying to open it in Chrome fails. 
 x webnull www.reddit.com doesn't strip the www. off
 
+UI
+---
+Comand based. 
 
-there should be a switch to enable, ideally enable for a set time.
-usage: sudo webnull --enable (-e) facebook
-usage: sudo webnull --enable-all (-a)
-usage: sudo webnull -et 30 facebook
+rn: deny/allow
+
+webnull deny example.com
+webnull d example.com ??
+
+webnull allow [-tamf] example.com
+webnull a example.com ??
+
+webnull remove example.com
+
+deny/permit
+disallow/allow
+blackhole/unblackhole
+disconnect/connect/reconnect
+
+usage: sudo webnull deny facebook.com
+usage: sudo webnull allow facebook
+usage: sudo webnull allow -a
+usage: sudo webnull allow -t 30 facebook
+usage: sudo webnull allow -f (f == forever, remove the listing from the managed set.)
+    * should -f just permanetly comment it out or remove it from the list?
+        * if commented out, we should have another command that removes it from the list...
 
 default is 5 minutes
 -t in minutes
@@ -42,6 +70,5 @@ default is 5 minutes
 
 * we should only have 1 waiting at a time, so we write when we do this.
 * file locking? possible?
-* catch ctl-c and reset the file in that case
 
 * how do I solve having two different sites enabled in two different terminals?
