@@ -6,6 +6,7 @@ import tempfile
 import unittest
 import time
 import subprocess
+import inspect
 import Queue
 
 from watchdog.observers.fsevents import FSEventsObserver
@@ -17,7 +18,6 @@ class ChangeHandler(FileSystemEventHandler):
     def __init__(self, shared_queue):
         self.shared_queue = shared_queue
     def on_modified(self, event):
-        print 'MODIFIED'
         with open(event.src_path, 'r') as hostfile:
             body = hostfile.read()
             self.shared_queue.put(body)
@@ -28,16 +28,11 @@ class WebnullTests(unittest.TestCase):
         self.temp_dir = tempfile.mkdtemp()
         self.hostfile_path = os.path.join(self.temp_dir, 'test_hostfile')
         shutil.copy2(BASIC_HOSTFILE_PATH, self.hostfile_path)
-        print self.hostfile_path
 
     def tearDown(self):
-        print 'Tearing Down'
         shutil.rmtree(self.temp_dir)
 
-
     # Run the given command
-    # Every time the hostfile_path file changes, yeild the current version to the caller
-    # Maybe also yeild the cmd output?
     # honetsly, best would be when the file changes, wait a fraction of a seonc and then send all new output and all new file
     # return when command exits.
     def run_test_command(self, cmd):
@@ -52,7 +47,7 @@ class WebnullTests(unittest.TestCase):
         if 'DEV_MODE' in env:
             del env['DEV_MODE']
         env['HOSTFILE_PATH'] = self.hostfile_path
-        env['TEST_DURATION'] = '0.05'
+        env['TEST_DURATION'] = '0.02'
         process = subprocess.Popen(args, env=env)
         process.wait()
         time.sleep(.1) # if we just quit, the observer doesn't see the final file action.
@@ -61,26 +56,44 @@ class WebnullTests(unittest.TestCase):
         while not shared_queue.empty():
             bodies.append(shared_queue.get())
 
-        print 'back'
         observer.stop()
         observer.join()
         return bodies
 
+    def check_test_file(self, test_case, test_case_name, save_success_case=False):
+        file_path = os.path.join('./test_resources/', test_case_name + '.out')
+        if save_success_case:
+            with open(file_path, 'w') as f:
+                f.write(test_case)
+                print 'Wrote Success for ' + test_case_name
+                print test_case
+                self.assertTrue(False)
+        else:
+            with open(file_path, 'r') as f:
+                success_case = f.read()
+                self.assertEqual(test_case, success_case)
 
+    def check_test_command(self, test_cmd, save_success_case=False):
+        caller_name = inspect.stack()[1][3] # This reallllly expects to be called via check_test_command. Pretty frikken ugly.
+        bodies = self.run_test_command(test_cmd)
+        test_file = '\n'.join(bodies)
+        self.check_test_file(test_file, caller_name, save_success_case)
+
+    # ------- Test Cases --------
     def test_deny_new_site(self):
-        print 'New Site Add'
         deny_new_site_cmd = ['deny', 'facebook.com']
-        bodies = self.run_test_command(deny_new_site_cmd)
-        print 'denied?'
-        self.assertTrue(True)
-        # bodies.count == 1
-        # and the body has to be the same as the example body.
-        # Should be able to record this and play it back. save based on name of everything.
+        self.check_test_command(deny_new_site_cmd)
 
     def test_allow_old_site(self):
-        print 'Old Site Allow'
         allow_old_site_cmd = ['allow', 'daring']
-        self.run_test_command(allow_old_site_cmd)
+        self.check_test_command(allow_old_site_cmd)
+
+    def test_deny_old_site(self):
+        deny_old_site_cmd = ['deny', 'daringfireball.net']
+        self.check_test_command(deny_old_site_cmd)
+
+
+
         # Get back: (commented out stuff, "daring is enabled until 2017-03-09 23:24:02.994630")
         # Get back: (uncommented out stuff, "")
         # let's just do file changes for now.

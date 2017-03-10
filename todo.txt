@@ -38,6 +38,11 @@ BACKLOG
     * maybe store the read in local variables.
 * switch from localhost addresses to invalid addresses.
 * make not using sudo print a nicer error
+* Could use a different method than fsevents
+    * Maybe have webnull emit a signal every time it writes? Have Popen catch it?
+        * That's not a thing, I dont' think.
+    * Maybe just print our writes into stdout, then we don't have to wait?
+* How do I test the delay?
 
 BUGS
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
