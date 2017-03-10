@@ -15,6 +15,8 @@ COMMENTED_MATCHER = r'^#\s(.*{0})'
 class ManagedHostfile:
     SHIBBOLETH = '\n## webnull will only write below this line ##\n'
     HOSTFILE_PATH = '/etc/hosts' if 'DEV_MODE' not in os.environ else 'dummyhosts'
+    if 'HOSTFILE_PATH' in os.environ:
+        HOSTFILE_PATH = os.environ['HOSTFILE_PATH']
 
     def _head_and_tail(self):
         with open(self.HOSTFILE_PATH, 'r') as hostfile:
@@ -104,7 +106,7 @@ def unblock_all():
     if managed == '':
         print 'Your hostsfile is not managed by webnull, we won\'t change anything'
         sys.exit(1)
-    else: 
+    else:
         new_managed = re.sub(r'^(.+)', r'# \1', managed, flags=re.MULTILINE)
 
         hostfile.write_body(new_managed)
@@ -116,12 +118,15 @@ def reblock_all():
     if managed == '':
         print 'Your hostsfile is not managed by webnull, we won\'t change anything'
         sys.exit(1)
-    else: 
+    else:
         new_managed = re.sub(r'^#\s(.+)', r'\1', managed, flags=re.MULTILINE)
 
         hostfile.write_body(new_managed)
 
 def reblock_timer(sitename, duration, all=False):
+    if 'TEST_DURATION' in os.environ:
+        duration = float(os.environ['TEST_DURATION'])
+
     if all:
         unblock_all()
     else:
