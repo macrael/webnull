@@ -50,7 +50,7 @@ class WebnullTests(unittest.TestCase):
         env['TEST_DURATION'] = '0.02'
         process = subprocess.Popen(args, env=env)
         process.wait()
-        time.sleep(.1) # if we just quit, the observer doesn't see the final file action.
+        time.sleep(.09) # if we just quit, the observer doesn't see the final file action.
 
         bodies = []
         while not shared_queue.empty():
@@ -84,13 +84,23 @@ class WebnullTests(unittest.TestCase):
         deny_new_site_cmd = ['deny', 'facebook.com']
         self.check_test_command(deny_new_site_cmd)
 
+    def test_deny_old_site(self):
+        deny_old_site_cmd = ['deny', 'twitter.com']
+        self.check_test_command(deny_old_site_cmd)
+
     def test_allow_old_site(self):
-        allow_old_site_cmd = ['allow', 'daring']
+        allow_old_site_cmd = ['allow', 'twitter']
         self.check_test_command(allow_old_site_cmd)
 
-    def test_deny_old_site(self):
-        deny_old_site_cmd = ['deny', 'daringfireball.net']
-        self.check_test_command(deny_old_site_cmd)
+    def test_allow_new_site(self):
+        allow_new_site_cmd = ['allow', 'foobar']
+        self.check_test_command(allow_new_site_cmd)
+
+    def test_allow_all_sites(self):
+        allow_all_cmd = ['allow', '-a']
+        self.check_test_command(allow_all_cmd)
+
+    # test that matches match multiple matches
 
 
 

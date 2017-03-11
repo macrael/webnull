@@ -90,14 +90,16 @@ def unblock_site(sitename):
     hostfile = ManagedHostfile()
     managed = hostfile.current_body()
 
+    null_matcher = HOST_MATCHER.format(hostname)
     if managed == '':
         print 'Your hostsfile is not managed by webnull, we won\'t change anything'
         sys.exit(1)
-    else:
-        null_matcher = HOST_MATCHER.format(hostname)
+    elif re.search(null_matcher, managed, flags=re.MULTILINE) != None:
         new_managed = re.sub(null_matcher, r'# \1', managed, flags=re.MULTILINE)
-
         hostfile.write_body(new_managed)
+    else:
+        print 'No host matches ' + sitename + '.'
+        sys.exit(1)
 
 def unblock_all():
     hostfile = ManagedHostfile()

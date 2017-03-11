@@ -42,6 +42,8 @@ BACKLOG
     * Maybe have webnull emit a signal every time it writes? Have Popen catch it?
         * That's not a thing, I dont' think.
     * Maybe just print our writes into stdout, then we don't have to wait?
+        * probably with a shibboleth to parse out the writes.
+        * thinks like dates will not work with the saver
 * How do I test the delay?
 
 BUGS
