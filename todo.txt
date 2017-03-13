@@ -21,8 +21,7 @@ x update readme
     * or do I want to go whole hog and let the sitename be a pattern? I'm injecting it into one...
 * don't add www if there's already a subdomain
 * could add short command names "d" and "a"
-* write tests. Should be pretty straightforward. intput, output, etc.
-    * might need to be able to specify hostfile location somehow.
+* better text for -a
 
 BACKLOG
 * make it a proper package

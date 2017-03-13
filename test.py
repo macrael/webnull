@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
-import os
-import shutil
-import tempfile
-import unittest
-import time
-import subprocess
 import inspect
+import os
 import Queue
+import re
+import shutil
+import subprocess
+import tempfile
+import time
+import unittest
 
 from watchdog.observers.fsevents import FSEventsObserver
 from watchdog.events import FileSystemEventHandler
@@ -60,7 +61,8 @@ class WebnullTests(unittest.TestCase):
         observer.join()
         return bodies
 
-    def check_test_file(self, test_case, test_case_name, save_success_case=False):
+    def check_test_file(self, test_case, save_success_case=False):
+        test_case_name = re.sub(r'^__main__\.(.+)',r'\1', unittest.TestCase.id(self))
         file_path = os.path.join('./test_resources/', test_case_name + '.out')
         if save_success_case:
             with open(file_path, 'w') as f:
@@ -74,10 +76,9 @@ class WebnullTests(unittest.TestCase):
                 self.assertEqual(test_case, success_case)
 
     def check_test_command(self, test_cmd, save_success_case=False):
-        caller_name = inspect.stack()[1][3] # This reallllly expects to be called via check_test_command. Pretty frikken ugly.
         bodies = self.run_test_command(test_cmd)
         test_file = '\n'.join(bodies)
-        self.check_test_file(test_file, caller_name, save_success_case)
+        self.check_test_file(test_file, save_success_case)
 
     # ------- Test Cases --------
     def test_deny_new_site(self):
