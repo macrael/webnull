@@ -80,7 +80,7 @@ class WebnullTests(unittest.TestCase):
         test_file = '\n'.join(bodies)
         self.check_test_file(test_file, save_success_case)
 
-    # ------- Test Cases --------
+    # ------- Integration Tests --------
     def test_deny_new_site(self):
         deny_new_site_cmd = ['deny', 'facebook.com']
         self.check_test_command(deny_new_site_cmd)

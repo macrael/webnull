@@ -9,7 +9,7 @@ import sys
 import time
 import urlparse
 
-HOST_MATCHER = r'^([^#\n].*{0})'
+HOST_MATCHER = r'^([^#\n].*{0}.*)'
 COMMENTED_MATCHER = r'^#\s(.*{0})'
 
 class ManagedHostfile:
@@ -17,6 +17,9 @@ class ManagedHostfile:
     HOSTFILE_PATH = '/etc/hosts' if 'DEV_MODE' not in os.environ else 'dummyhosts'
     if 'HOSTFILE_PATH' in os.environ:
         HOSTFILE_PATH = os.environ['HOSTFILE_PATH']
+
+    def __init__(self):
+        self.head, self.body = self._head_and_tail()
 
     def _head_and_tail(self):
         with open(self.HOSTFILE_PATH, 'r') as hostfile:
@@ -33,13 +36,29 @@ class ManagedHostfile:
             return preroll, managed
 
     def current_body(self):
-        _, body = self._head_and_tail()
-        return body
+        return self.body
 
     def write_body(self, new_body):
-        head, _ = self._head_and_tail()
         with open(self.HOSTFILE_PATH, 'w') as hostfile:
-            hostfile.write(head + self.SHIBBOLETH + new_body)
+            hostfile.write(self.head + self.SHIBBOLETH + new_body)
+            self.body = new_body
+
+    # Returns a list of hostnames modified
+    def transform_body(self, search_re, replacement_string):
+        managed = self.current_body()
+
+        matched_hostnames = None
+        if managed == '':
+            print 'Your hostsfile is not managed by webnull, we won\'t change anything'
+            exit(1)
+        else:
+            lines = re.findall(search_re, managed, flags=re.MULTILINE)
+            matched_hostnames = set(map(lambda line: re.match(r'^[^\t]+\t+([^\t]+)$', line).group(1), lines))
+            if (len(matched_hostnames) != 0):
+                new_managed = re.sub(search_re, replacement_string, managed, flags=re.MULTILINE)
+                self.write_body(new_managed)
+
+        return matched_hostnames
 
 def parse_hostname(sitename):
     parsed_url = urlparse.urlparse(sitename)
@@ -88,79 +107,59 @@ def unblock_site(sitename):
     hostname = parse_hostname(sitename)
 
     hostfile = ManagedHostfile()
-    managed = hostfile.current_body()
 
     null_matcher = HOST_MATCHER.format(hostname)
-    if managed == '':
-        print 'Your hostsfile is not managed by webnull, we won\'t change anything'
-        sys.exit(1)
-    elif re.search(null_matcher, managed, flags=re.MULTILINE) != None:
-        new_managed = re.sub(null_matcher, r'# \1', managed, flags=re.MULTILINE)
-        hostfile.write_body(new_managed)
-    else:
+
+    unblocked_hosts = hostfile.transform_body(null_matcher, r'# \1')
+
+    if len(unblocked_hosts) == 0:
         print 'No host matches ' + sitename + '.'
         sys.exit(1)
 
+    print 'Allowing access to:'
+    print '\n'.join(unblocked_hosts)
+
+
 def unblock_all():
     hostfile = ManagedHostfile()
-    managed = hostfile.current_body()
 
-    if managed == '':
-        print 'Your hostsfile is not managed by webnull, we won\'t change anything'
-        sys.exit(1)
-    else:
-        new_managed = re.sub(r'^(.+)', r'# \1', managed, flags=re.MULTILINE)
-
-        hostfile.write_body(new_managed)
+    all_matcher = r'^(.+)'
+    unblocked_hosts = hostfile.transform_body(all_matcher, r'# \1')
+    print "Allowing access to all sites" # finally a reason to use python 3
 
 def reblock_all():
     hostfile = ManagedHostfile()
-    managed = hostfile.current_body()
 
-    if managed == '':
-        print 'Your hostsfile is not managed by webnull, we won\'t change anything'
-        sys.exit(1)
-    else:
-        new_managed = re.sub(r'^#\s(.+)', r'\1', managed, flags=re.MULTILINE)
+    unblocked_matcher = r'^#\s(.+)'
+    reblocked_hosts = hostfile.transform_body(unblocked_matcher, r'\1')
 
-        hostfile.write_body(new_managed)
-
-def reblock_timer(sitename, duration, all=False):
+def reblock_timer(duration, cleanup_func):
     if 'TEST_DURATION' in os.environ:
         duration = float(os.environ['TEST_DURATION'])
 
-    if all:
-        unblock_all()
-    else:
-        unblock_site(sitename)
-
-    def cleanup():
-        if all:
-            reblock_all()
-        else:
-            nullify_site(sitename)
-
     def sigint_handler(signal, frame):
-        cleanup()
+        cleanup_func()
         sys.exit(0)
     signal.signal(signal.SIGINT, sigint_handler)
 
-    print sitename + ' is enabled until ' + str(datetime.datetime.now() + datetime.timedelta(minutes=duration))
+    print 'until ' + str(datetime.datetime.now() + datetime.timedelta(minutes=duration))
     time.sleep(duration * 60)
-    cleanup()
-
-def enable_all(duration):
-    reblock_timer('ALL_ARE_ENABLED', duration, all=True)
+    cleanup_func()
 
 
 def deny_site(args):
     nullify_site(args.sitename)
 
 def allow_site(args):
+    cleanup_func = None
     if args.all:
-        enable_all(args.time)
+        unblock_all()
+        cleanup_func = reblock_all
     else:
-        reblock_timer(args.sitename, args.time)
+        unblock_site(args.sitename)
+        cleanup_func = lambda: nullify_site(args.sitename)
+
+    reblock_timer(args.time, cleanup_func)
 
 def arg_parser():
     parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')

@@ -12,20 +12,27 @@ x switch to the local dummy hosts when you pass an enviornment variable
 x make it unblackhole all
 x switch to command based UI
 x update readme
-* Add tests
+x Add tests
 * refactor, way too much shared code again.
+    * should pass the hostfile path into ManagedHostfile()
+    x Managed hostfile should read on init and then store the head.
+    x add modify_body to ManagedHostfile
+* test initial setup, an unmanaged hostfile.
 * make it unblackhole until tomorrow
-* If you -e a pattern that matches nothing, print an error and don't time
+x If you -e a pattern that matches nothing, print an error and don't time
 * list the patterns that actually matched
+* better text for -a
+* pretty time output
+
+BACKLOG
 * make sure that .'s in the search name aren't being used as . in the re
     * or do I want to go whole hog and let the sitename be a pattern? I'm injecting it into one...
 * don't add www if there's already a subdomain
     * for subdomains, just put the subdomain, for hostnames put it and www
 * could add short command names "d" and "a"
-* better text for -a
 * dont' crash on invalid hostnames, reject them properly.
+* add a "remove webnull" that removes the shibboleth and everything below
 
-BACKLOG
 * maybe -a is actually just leaving the name field blank? not a flag
 * make it a proper package
     * virtualenv
@@ -34,8 +41,8 @@ BACKLOG
     * setup.py?
 * make a man page
 * write a dotfile so that when moving to a new machine I can bring it all along
-	* ugh this probably makes concurrancy way more real.
-	* might be nice because we can just rewrite the whole file every time instead of doing parts?
+    * ugh this probably makes concurrancy way more real.
+    * might be nice because we can just rewrite the whole file every time instead of doing parts?
 * don't do two reads everytime
     * maybe store the read in local variables.
 * switch from localhost addresses to invalid addresses.
@@ -47,11 +54,15 @@ BACKLOG
         * probably with a shibboleth to parse out the writes.
         * thinks like dates will not work with the saver
 * How do I test the delay?
+    * print out what time it is when done, that way we can see if it matched the estimate.
 
 BUGS
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
     * Seems Safari related. pinging it or trying to open it in Chrome fails.
 x webnull www.reddit.com doesn't strip the www. off
+
+
+x manual testing of -t30 was dead on balls accurate.
 
 UI
 ---
