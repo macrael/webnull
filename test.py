@@ -102,8 +102,13 @@ class WebnullTests(unittest.TestCase):
         self.check_test_command(allow_all_cmd)
 
     # test that matches match multiple matches
+    def test_allow_multi_match(self):
+        deny_twitter_api_cmd = ['deny', 'api.twitter.com']
+        allow_twitter_cmd = ['allow', 'twitter']
+        self.run_test_command(deny_twitter_api_cmd)
+        self.check_test_command(allow_twitter_cmd)
 
-
+    # test times somehow
 
         # Get back: (commented out stuff, "daring is enabled until 2017-03-09 23:24:02.994630")
         # Get back: (uncommented out stuff, "")

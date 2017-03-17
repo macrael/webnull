@@ -20,10 +20,13 @@ x update readme
 * make sure that .'s in the search name aren't being used as . in the re
     * or do I want to go whole hog and let the sitename be a pattern? I'm injecting it into one...
 * don't add www if there's already a subdomain
+    * for subdomains, just put the subdomain, for hostnames put it and www
 * could add short command names "d" and "a"
 * better text for -a
+* dont' crash on invalid hostnames, reject them properly.
 
 BACKLOG
+* maybe -a is actually just leaving the name field blank? not a flag
 * make it a proper package
     * virtualenv
     * pip file
