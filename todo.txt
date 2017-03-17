@@ -15,14 +15,18 @@ x update readme
 x Add tests
 * refactor, way too much shared code again.
     * should pass the hostfile path into ManagedHostfile()
+    * maybe more stuff can be put on as methods for ManagedHostfile()
     x Managed hostfile should read on init and then store the head.
     x add modify_body to ManagedHostfile
+x list the patterns that actually matched
+x better text for -a
 * test initial setup, an unmanaged hostfile.
+* test denying a permaallowed site.
 * make it unblackhole until tomorrow
-x If you -e a pattern that matches nothing, print an error and don't time
-* list the patterns that actually matched
-* better text for -a
 * pretty time output
+* should we error if you do "deny foobar"?
+* get printfunc from future
+* ---- release 1.0 ----
 
 BACKLOG
 * make sure that .'s in the search name aren't being used as . in the re
@@ -60,6 +64,7 @@ BUGS
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
     * Seems Safari related. pinging it or trying to open it in Chrome fails.
 x webnull www.reddit.com doesn't strip the www. off
+x If you -e a pattern that matches nothing, print an error and don't time
 
 
 x manual testing of -t30 was dead on balls accurate.

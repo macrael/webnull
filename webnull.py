@@ -91,7 +91,7 @@ def nullify_site(sitename):
         sys.exit(0)
     elif re.search(neuter_matcher, managed, flags=re.MULTILINE) != None:
         # if it's commented, we replace it
-        managed = re.sub(neuter_matcher, r'\1', managed, flags=re.MULTILINE)
+        hostfile.transform_body(neuter_matcher, r'\1')
     else:
         # if it's not there, we write it.
         ip5null = '127.0.0.1\t'
@@ -101,15 +101,13 @@ def nullify_site(sitename):
             for www in ['', 'www.']:
                 managed += (null + www + hostname + '\n')
 
-    hostfile.write_body(managed)
+        hostfile.write_body(managed)
 
 def unblock_site(sitename):
     hostname = parse_hostname(sitename)
-
     hostfile = ManagedHostfile()
 
     null_matcher = HOST_MATCHER.format(hostname)
-
     unblocked_hosts = hostfile.transform_body(null_matcher, r'# \1')
 
     if len(unblocked_hosts) == 0:

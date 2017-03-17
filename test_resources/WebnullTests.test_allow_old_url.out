@@ -1,0 +1,39 @@
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1	localhost
+255.255.255.255	broadcasthost
+::1             localhost
+
+## webnull will only write below this line ##
+# 127.0.0.1	twitter.com
+# 127.0.0.1	www.twitter.com
+# ::1		twitter.com
+# ::1		www.twitter.com
+# 127.0.0.1	daringfireball.net
+# 127.0.0.1	www.daringfireball.net
+# ::1		daringfireball.net
+# ::1		www.daringfireball.net
+
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1	localhost
+255.255.255.255	broadcasthost
+::1             localhost
+
+## webnull will only write below this line ##
+127.0.0.1	twitter.com
+127.0.0.1	www.twitter.com
+::1		twitter.com
+::1		www.twitter.com
+# 127.0.0.1	daringfireball.net
+# 127.0.0.1	www.daringfireball.net
+# ::1		daringfireball.net
+# ::1		www.daringfireball.net

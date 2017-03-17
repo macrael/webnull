@@ -61,26 +61,27 @@ class WebnullTests(unittest.TestCase):
         observer.join()
         return bodies
 
-    def check_test_file(self, test_case, save_success_case=False):
+    def check_test_file(self, test_case, work_in_progress=False):
         test_case_name = re.sub(r'^__main__\.(.+)',r'\1', unittest.TestCase.id(self))
         file_path = os.path.join('./test_resources/', test_case_name + '.out')
-        if save_success_case:
+        if work_in_progress:
             with open(file_path, 'w') as f:
                 f.write(test_case)
                 print 'Wrote Success for ' + test_case_name
                 print test_case
-                self.assertTrue(False)
+                self.assertTrue(False, msg="Test is still a work in progress.")
         else:
             with open(file_path, 'r') as f:
                 success_case = f.read()
                 self.assertEqual(test_case, success_case)
 
-    def check_test_command(self, test_cmd, save_success_case=False):
+    def check_test_command(self, test_cmd, work_in_progress=False):
         bodies = self.run_test_command(test_cmd)
         test_file = '\n'.join(bodies)
-        self.check_test_file(test_file, save_success_case)
+        self.check_test_file(test_file, work_in_progress)
 
     # ------- Integration Tests --------
+    # --- Deny ---
     def test_deny_new_site(self):
         deny_new_site_cmd = ['deny', 'facebook.com']
         self.check_test_command(deny_new_site_cmd)
@@ -89,8 +90,37 @@ class WebnullTests(unittest.TestCase):
         deny_old_site_cmd = ['deny', 'twitter.com']
         self.check_test_command(deny_old_site_cmd)
 
+    def deny_new_hostname(self):
+        deny_new_hostname_cmd = ['deny', 'https://news.ycombinator.com/item?id=13896065']
+        self.check_test_command(deny_new_hostname_cmd)
+
+    def test_deny_allowed_site(self):
+        deny_old_cmd = ['deny', 'daringfireball.net']
+        self.check_test_command(deny_old_cmd)
+
+    def test_deny_allowed_site_partial(self):
+        # What's the right behavior here?
+        # TODO: questionable behavior here right now.
+        deny_old_cmd = ['deny', 'daring']
+        self.check_test_command(deny_old_cmd)
+
+    def test_deny_fake_site(self):
+        deny_fake_cmd = ['deny', 'foobar']
+        # TODO: even *more* questionable behavior here.
+        self.check_test_command(deny_fake_cmd)
+
+    def test_deny_fake_site2(self):
+        deny_fake_cmd = ['deny', '/foobar']
+        self.check_test_command(deny_fake_cmd)
+
+
+    # --- Allow ---
     def test_allow_old_site(self):
         allow_old_site_cmd = ['allow', 'twitter']
+        self.check_test_command(allow_old_site_cmd)
+
+    def test_allow_old_url(self):
+        allow_old_site_cmd = ['allow', 'http://twitter.com/gskinner/']
         self.check_test_command(allow_old_site_cmd)
 
     def test_allow_new_site(self):
@@ -101,18 +131,15 @@ class WebnullTests(unittest.TestCase):
         allow_all_cmd = ['allow', '-a']
         self.check_test_command(allow_all_cmd)
 
-    # test that matches match multiple matches
+    def test_allow_allowed_site(self): # TODO: arguably we should note that it is already allowed...
+        allow_allowed_cmd = ['allow', 'daring']
+        self.check_test_command(allow_allowed_cmd)
+
     def test_allow_multi_match(self):
         deny_twitter_api_cmd = ['deny', 'api.twitter.com']
         allow_twitter_cmd = ['allow', 'twitter']
         self.run_test_command(deny_twitter_api_cmd)
         self.check_test_command(allow_twitter_cmd)
-
-    # test times somehow
-
-        # Get back: (commented out stuff, "daring is enabled until 2017-03-09 23:24:02.994630")
-        # Get back: (uncommented out stuff, "")
-        # let's just do file changes for now.
 
 
 if __name__ == '__main__':
