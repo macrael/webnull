@@ -15,17 +15,17 @@ x update readme
 x Add tests
 * refactor, way too much shared code again.
     * should pass the hostfile path into ManagedHostfile()
+    x get printfunc from future
     * maybe more stuff can be put on as methods for ManagedHostfile()
     x Managed hostfile should read on init and then store the head.
     x add modify_body to ManagedHostfile
 x list the patterns that actually matched
 x better text for -a
+x test denying a permaallowed site.
 * test initial setup, an unmanaged hostfile.
-* test denying a permaallowed site.
 * make it unblackhole until tomorrow
 * pretty time output
 * should we error if you do "deny foobar"?
-* get printfunc from future
 * ---- release 1.0 ----
 
 BACKLOG

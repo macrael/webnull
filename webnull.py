@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
 import argparse
 import datetime
 import os
@@ -49,7 +50,7 @@ class ManagedHostfile:
 
         matched_hostnames = None
         if managed == '':
-            print 'Your hostsfile is not managed by webnull, we won\'t change anything'
+            print('Your hostsfile is not managed by webnull, we won\'t change anything')
             exit(1)
         else:
             lines = re.findall(search_re, managed, flags=re.MULTILINE)
@@ -67,7 +68,7 @@ def parse_hostname(sitename):
         # If you pass in 'facebook.com/foo' urlparse treats it all as the path
         match = re.match(r'[^/]+', parsed_url.path)
         if match == None:
-            print 'ERROR: Unable to make the provided sitename into a hostname: ' + parsed_url.path
+            print('ERROR: Unable to make the provided sitename into a hostname: ' + parsed_url.path)
             sys.exit(1)
         hostname = match.group(0)
 
@@ -87,7 +88,7 @@ def nullify_site(sitename):
     neuter_matcher = COMMENTED_MATCHER.format(hostname)
     if re.search(null_matcher, managed, flags=re.MULTILINE) != None:
         # if it's not commented, we ignore it
-        print hostname + ' has already been sent to webnull'
+        print(hostname + ' has already been sent to webnull')
         sys.exit(0)
     elif re.search(neuter_matcher, managed, flags=re.MULTILINE) != None:
         # if it's commented, we replace it
@@ -111,11 +112,11 @@ def unblock_site(sitename):
     unblocked_hosts = hostfile.transform_body(null_matcher, r'# \1')
 
     if len(unblocked_hosts) == 0:
-        print 'No host matches ' + sitename + '.'
+        print('No host matches ' + sitename + '.')
         sys.exit(1)
 
-    print 'Allowing access to:'
-    print '\n'.join(unblocked_hosts)
+    print('Allowing access to:')
+    print('\n'.join(unblocked_hosts))
 
 
 def unblock_all():
@@ -123,7 +124,7 @@ def unblock_all():
 
     all_matcher = r'^(.+)'
     unblocked_hosts = hostfile.transform_body(all_matcher, r'# \1')
-    print "Allowing access to all sites" # finally a reason to use python 3
+    print('Allowing access to all sites ', end='') # finally a reason to use python 3
 
 def reblock_all():
     hostfile = ManagedHostfile()
@@ -140,7 +141,7 @@ def reblock_timer(duration, cleanup_func):
         sys.exit(0)
     signal.signal(signal.SIGINT, sigint_handler)
 
-    print 'until ' + str(datetime.datetime.now() + datetime.timedelta(minutes=duration))
+    print('until ' + str(datetime.datetime.now() + datetime.timedelta(minutes=duration)))
     time.sleep(duration * 60)
     cleanup_func()
 
@@ -178,7 +179,9 @@ def arg_parser():
 
 if __name__ == '__main__':
     if 'DEV_MODE' in os.environ:
-        print 'Running in Development Mode'
+        print('Running in Development Mode')
+
+
 
     args = arg_parser().parse_args()
     args.func(args)
