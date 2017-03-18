@@ -13,12 +13,10 @@ x make it unblackhole all
 x switch to command based UI
 x update readme
 x Add tests
-* refactor, way too much shared code again.
-    * should pass the hostfile path into ManagedHostfile()
-    x get printfunc from future
-    * maybe more stuff can be put on as methods for ManagedHostfile()
-    x Managed hostfile should read on init and then store the head.
+x refactor, way too much shared code again.
     x add modify_body to ManagedHostfile
+    x Managed hostfile should read on init and then store the head.
+    x get printfunc from future
 x list the patterns that actually matched
 x better text for -a
 x test denying a permaallowed site.
@@ -29,6 +27,9 @@ x test denying a permaallowed site.
 * ---- release 1.0 ----
 
 BACKLOG
+* refactor again
+    * should pass the hostfile path into ManagedHostfile()
+    * maybe more stuff can be put on as methods for ManagedHostfile()
 * make sure that .'s in the search name aren't being used as . in the re
     * or do I want to go whole hog and let the sitename be a pattern? I'm injecting it into one...
 * don't add www if there's already a subdomain
