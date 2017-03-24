@@ -39,7 +39,7 @@ def generate_delta_tests():
         test_name = 'test_' + label
         setattr(PrettyDateTests, test_name, new_test)
 
+generate_delta_tests()
 
 if __name__ == '__main__':
-    generate_delta_tests()
     unittest.main()

@@ -22,8 +22,11 @@ x better text for -a
 x test denying a permaallowed site.
 x test initial setup, an unmanaged hostfile.
 x pretty time output
-* make it unblackhole until tomorrow
+x make it unblackhole until tomorrow
 * update README
+* get rid of janky setup.py (ugh, got to change macdev...)
+* make it an installable python egg (write eggr?)
+* rewrite tests to be fast?
 * ---- release 1.0 ----
 
 BACKLOG
@@ -93,6 +96,7 @@ disconnect/connect/reconnect
 usage: sudo webnull deny facebook.com
 usage: sudo webnull allow facebook
 usage: sudo webnull allow -a
+usage: sudo webnull allow -am
 usage: sudo webnull allow -t 30 facebook
 usage: sudo webnull allow -f (f == forever, remove the listing from the managed set.)
     * should -f just permanetly comment it out or remove it from the list?
@@ -100,7 +104,7 @@ usage: sudo webnull allow -f (f == forever, remove the listing from the managed 
 
 default is 5 minutes
 -t in minutes
---tomorrow -m ? -- enable until tomorrow
+--morning -m -- enable until tomorrow
 -am == all until tomorrow
 
 * we should only have 1 waiting at a time, so we write when we do this.
