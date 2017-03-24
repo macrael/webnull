@@ -173,8 +173,17 @@ def reblock_timer(duration, cleanup_func):
 def deny_site(args):
     nullify_site(args.sitename)
 
+def minutes_to_morning():
+    now = datetime.datetime.now()
+    morning = now.replace(hour=6, minute=1, second=0)
+    if now.hour > 6:
+        morning = morning + datetime.timedelta(days=1)
+    return (morning - now).seconds / 60
+
 def allow_site(args):
     cleanup_func = None
+    if args.morning:
+        args.time = minutes_to_morning()
     if args.all:
         unblock_all()
         cleanup_func = reblock_all
@@ -193,7 +202,9 @@ def arg_parser():
     deny.set_defaults(func=deny_site)
 
     allow = commands.add_parser('allow', description='Allow access to a blackholed site for a spell.', help='Allow access to a blackholed site for a spell.')
-    allow.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes.', default=5, type=int)
+    time_or_tomorrow = allow.add_mutually_exclusive_group()
+    time_or_tomorrow.add_argument('-t', '--time', help='sets the duration to enable a site for. Default is five minutes.', default=5, type=int)
+    time_or_tomorrow.add_argument('-m', '--morning', help='allow all sites until tomorrow morning at 6am', action='store_true')
     all_or_one = allow.add_mutually_exclusive_group(required=True)
     all_or_one.add_argument('-a', '--all', action='store_true', help='All blackholed hostnames will be granted access instead of a matching sitename.')
     all_or_one.add_argument('sitename', help='All blackholed hostnames that contain this string will be temporarlly granted access.', nargs='?')
