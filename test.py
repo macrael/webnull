@@ -14,6 +14,7 @@ from watchdog.observers.fsevents import FSEventsObserver
 from watchdog.events import FileSystemEventHandler
 
 BASIC_HOSTFILE_PATH = './test_resources/basic_hostfile'
+VIRGIN_HOSTFILE_PATH = './test_resources/virgin_hostfile'
 
 class ChangeHandler(FileSystemEventHandler):
     def __init__(self, shared_queue):
@@ -112,6 +113,11 @@ class WebnullTests(unittest.TestCase):
     def test_deny_fake_site2(self):
         deny_fake_cmd = ['deny', '/foobar']
         self.check_test_command(deny_fake_cmd)
+
+    def test_deny_first_site(self):
+        shutil.copy2(VIRGIN_HOSTFILE_PATH, self.hostfile_path)
+        first_site_cmd = ['deny', 'facebook.com']
+        self.check_test_command(first_site_cmd)
 
 
     # --- Allow ---

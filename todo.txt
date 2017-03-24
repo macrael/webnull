@@ -20,13 +20,14 @@ x refactor, way too much shared code again.
 x list the patterns that actually matched
 x better text for -a
 x test denying a permaallowed site.
-* test initial setup, an unmanaged hostfile.
+x test initial setup, an unmanaged hostfile.
+x pretty time output
 * make it unblackhole until tomorrow
-* pretty time output
-* should we error if you do "deny foobar"?
+* update README
 * ---- release 1.0 ----
 
 BACKLOG
+* should we error if you do "deny foobar"?
 * refactor again
     * should pass the hostfile path into ManagedHostfile()
     * maybe more stuff can be put on as methods for ManagedHostfile()

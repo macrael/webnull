@@ -115,7 +115,6 @@ def unblock_site(sitename):
         print('No host matches ' + sitename + '.')
         sys.exit(1)
 
-    print('Allowing access to:')
     print('\n'.join(unblocked_hosts))
 
 
@@ -124,13 +123,36 @@ def unblock_all():
 
     all_matcher = r'^(.+)'
     unblocked_hosts = hostfile.transform_body(all_matcher, r'# \1')
-    print('Allowing access to all sites ', end='') # finally a reason to use python 3
+    print('all sites ', end='') # finally a reason to use python 3
 
 def reblock_all():
     hostfile = ManagedHostfile()
 
     unblocked_matcher = r'^#\s(.+)'
     reblocked_hosts = hostfile.transform_body(unblocked_matcher, r'\1')
+
+def pretty_suffix(d):
+    return 'th' if 11<=d<=13 else {1:'st',2:'nd',3:'rd'}.get(d%10, 'th')
+
+def pretty_time(time, now=datetime.datetime.now()):
+    tomorrow = now + datetime.timedelta(days=1)
+    next_day = now + datetime.timedelta(days=2)
+    next_week = now + datetime.timedelta(weeks=1)
+    pretty_fmt = '%-I:%M %p'
+    pretty_prefix = ''
+    if tomorrow < time < next_day:
+        pretty_prefix = 'tomorrow at '
+    elif time > next_day and time < next_week:
+        pretty_prefix = '%A at '
+    elif time > next_week and time.month == now.month and time.year == now.year:
+        pretty_prefix = '%A the %-d' + pretty_suffix(time.day) + ' at '
+    elif time > next_week and time.year == now.year:
+        pretty_prefix = '%B %-d' + pretty_suffix(time.day) + ' at '
+    elif time > next_week:
+        pretty_prefix = '%B %-d' + pretty_suffix(time.day) + ' %Y at '
+
+    return time.strftime(pretty_prefix + pretty_fmt)
+
 
 def reblock_timer(duration, cleanup_func):
     if 'TEST_DURATION' in os.environ:
@@ -141,7 +163,9 @@ def reblock_timer(duration, cleanup_func):
         sys.exit(0)
     signal.signal(signal.SIGINT, sigint_handler)
 
-    print('until ' + str(datetime.datetime.now() + datetime.timedelta(minutes=duration)))
+    end_time = datetime.datetime.now() + datetime.timedelta(minutes=duration)
+    ptime = pretty_time(end_time)
+    print('allowed until ' + ptime)
     time.sleep(duration * 60)
     cleanup_func()
 
