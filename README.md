@@ -20,15 +20,25 @@ Installation
 
 Dev Mode
 --------------
-`$ cp /etc/hosts dummyhosts`
-`$ export DEV_MODE=1`
+Dev Mode protects your live hostfile during development
+```
+$ cp /etc/hosts dummyhosts
+$ export DEV_MODE=1
+$ ./webnull.py allow ...
+```
 
 Testing
 ----------
-* `$ brew install python`
-* `$ easy_install pip`
-* `$ pip install virtualenv`
-* `$ virtualenv venv`
-* `$ source venv/bin/activate`
-* `$ pip install watchdog`
-* `$ python -m unittest discover tests`
+```
+$ brew install python
+$ easy_install pip
+$ pip install virtualenv
+$ virtualenv venv
+$ source venv/bin/activate
+$ pip install watchdog
+$ python -m unittest discover tests
+```
+
+This code has only been tested on macOS with python 2.7
+
+It will only work on systems that use an /etc/hosts file.

@@ -23,13 +23,14 @@ x test denying a permaallowed site.
 x test initial setup, an unmanaged hostfile.
 x pretty time output
 x make it unblackhole until tomorrow
-* update README
 * get rid of janky setup.py (ugh, got to change macdev...)
 * make it an installable python egg (write eggr?)
-* rewrite tests to be fast?
+    * make it install locally too
+* update README
 * ---- release 1.0 ----
 
 BACKLOG
+* rewrite tests to be fast?
 * should we error if you do "deny foobar"?
 * refactor again
     * should pass the hostfile path into ManagedHostfile()
