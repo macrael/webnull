@@ -26,10 +26,12 @@ x make it unblackhole until tomorrow
 * get rid of janky setup.py (ugh, got to change macdev...)
 * make it an installable python egg (write eggr?)
     * make it install locally too
+    * build it for python 2 & 3?
 * update README
 * ---- release 1.0 ----
 
 BACKLOG
+* setup.py test
 * rewrite tests to be fast?
 * should we error if you do "deny foobar"?
 * refactor again

@@ -13,13 +13,16 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
     name='webnull',
     version='0.1.0',
+    test_suite='tests',
     description='A tool for putting hosts into a blackhole',
     long_description=long_description,
     url='https://github.com/macrael/webnull',
     author='MacRae Linton',
-    author_email='me@macrael.com',
+    author_email='macrae@macrael.com',
     license='BSD',
     classifiers=[
+        'Environment :: MacOS X',
+        'Operating System :: MacOS :: MacOS X',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 2.7',
@@ -29,13 +32,9 @@ setup(
     extras_require={
         'test': ['watchdog'],
     },
-
-    # To provide executable scripts, use entry points in preference to the
-    # "scripts" keyword. Entry points provide cross-platform support and allow
-    # pip to create the appropriate form of executable for the target platform.
     entry_points={
         'console_scripts': [
-            'webnull=webnull',
+            'webnull=webnull:main',
         ],
     },
 )

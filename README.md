@@ -36,7 +36,7 @@ $ pip install virtualenv
 $ virtualenv venv
 $ source venv/bin/activate
 $ pip install watchdog
-$ python -m unittest discover tests
+$ python setup.py test
 ```
 
 This code has only been tested on macOS with python 2.7

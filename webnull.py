@@ -212,11 +212,12 @@ def arg_parser():
 
     return parser
 
-if __name__ == '__main__':
+def main():
     if 'DEV_MODE' in os.environ:
         print('Running in Development Mode')
 
-
-
     args = arg_parser().parse_args()
     args.func(args)
+
+if __name__ == '__main__':
+    main()

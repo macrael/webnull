@@ -63,7 +63,7 @@ class WebnullTests(unittest.TestCase):
         return bodies
 
     def check_test_file(self, test_case, work_in_progress=False):
-        test_case_name = re.sub(r'^(?:__main__|test_integration)\.(.+)',r'\1', unittest.TestCase.id(self))
+        test_case_name = re.sub(r'^(?:tests\.)?test_integration\.(.+)',r'\1', unittest.TestCase.id(self))
         file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), './test_resources/', test_case_name + '.out')
         if work_in_progress:
             with open(file_path, 'w') as f:
