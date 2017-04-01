@@ -23,7 +23,9 @@ x test denying a permaallowed site.
 x test initial setup, an unmanaged hostfile.
 x pretty time output
 x make it unblackhole until tomorrow
-* get rid of janky setup.py (ugh, got to change macdev...)
+x get rid of janky setup.py !!(ugh, got to change macdev...)!!
+x sleeping the machine makes it lose track of time.
+    x made -am totally flail
 * make it an installable python egg (write eggr?)
     * make it install locally too
     * build it for python 2 & 3?
@@ -31,6 +33,8 @@ x make it unblackhole until tomorrow
 * ---- release 1.0 ----
 
 BACKLOG
+* convert to python 3
+* add type information
 * setup.py test
 * rewrite tests to be fast?
 * should we error if you do "deny foobar"?

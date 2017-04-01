@@ -166,7 +166,18 @@ def reblock_timer(duration, cleanup_func):
     end_time = datetime.datetime.now() + datetime.timedelta(minutes=duration)
     ptime = pretty_time(end_time)
     print('allowed until ' + ptime)
-    time.sleep(duration * 60)
+
+    now = time.time()
+    end_time = now + (duration * 60)
+    while True:
+        remaining = end_time - time.time()
+        if remaining <= 0:
+            break
+        if remaining > 1000:
+            time.sleep(10)
+        else:
+            time.sleep(1)
+
     cleanup_func()
 
 
