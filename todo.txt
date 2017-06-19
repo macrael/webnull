@@ -73,8 +73,9 @@ BACKLOG
 
 
 BUGS
-* If I close an iTerm2 window with it in it, it doesn't catch the signal
+x If I close an iTerm2 window with it in it, it doesn't catch the signal
     * seems like it might not be catchable. I tried all the signals
+    * strangely, it seems like it takes a couple seconds to send SIGHUP
 * sometimes, it takes a minute for the website (twitter) to go away, do I need to kill some daemon or reset some cache or something?
     * Seems Safari related. pinging it or trying to open it in Chrome fails.
 x webnull www.reddit.com doesn't strip the www. off
