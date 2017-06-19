@@ -161,7 +161,9 @@ def reblock_timer(duration, cleanup_func):
     def sigint_handler(signal, frame):
         cleanup_func()
         sys.exit(0)
-    signal.signal(signal.SIGINT, sigint_handler)
+    signals = [signal.SIGINT, signal.SIGHUP]
+    for sig in signals:
+        signal.signal(sig, sigint_handler)
 
     end_time = datetime.datetime.now() + datetime.timedelta(minutes=duration)
     ptime = pretty_time(end_time)
