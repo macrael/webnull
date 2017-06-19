@@ -12,7 +12,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='webnull',
-    version='1.0.0',
+    version='1.0.1',
     test_suite='tests',
     description='A tool for putting hosts into a blackhole',
     long_description=long_description,
