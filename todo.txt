@@ -31,9 +31,10 @@ x sleeping the machine makes it lose track of time.
 * make it an installable python egg (write eggr?)
     * make it install locally too
 x update README
-* ---- release 1.0 ----
+x ---- release 1.0 ----
 
 BACKLOG
+* allow enabling multiple regexes at once. 
 * setup venv?
 * convert to python 3
 * write a log of allowed times so that I can collect stats
