@@ -1,6 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from __future__ import print_function
 import argparse
 import datetime
 import os
@@ -8,7 +7,7 @@ import re
 import signal
 import sys
 import time
-import urlparse
+import urllib.parse
 
 HOST_MATCHER = r'^([^#\n].*{0}.*)'
 COMMENTED_MATCHER = r'^#\s(.*{0})'
@@ -62,7 +61,7 @@ class ManagedHostfile:
         return matched_hostnames
 
 def parse_hostname(sitename):
-    parsed_url = urlparse.urlparse(sitename)
+    parsed_url = urllib.parse.urlparse(sitename)
     hostname = parsed_url.netloc
     if hostname == '':
         # If you pass in 'facebook.com/foo' urlparse treats it all as the path
