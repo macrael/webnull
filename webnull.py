@@ -207,7 +207,9 @@ def allow_site(args):
 
 def arg_parser():
     parser = argparse.ArgumentParser(description='A tool for putting websites into a black hole.')
-    commands = parser.add_subparsers(title='commands', metavar='')
+    commands = parser.add_subparsers(title='commands', metavar='COMMAND')
+    commands.required = True
+    commands.dest = "commands"
 
     deny = commands.add_parser('deny', description='Add a site to the black hole. It will become unreachable.', help='Add a site to the black hole. It will become unreachable.')
     deny.add_argument('sitename', help='The website to be blackholed. A URL will be stripped down correctly.')
