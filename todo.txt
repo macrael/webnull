@@ -35,10 +35,14 @@ x ---- release 1.0 ----
 * upgrade to python3
     x change code to run under python3
     * need to change something about prereques, probably. Install process?
+* track the time i spend with it unblocked, I would like to minimize that.
+    * write a log in ~/Library/Application Support ? Or a dotfile at ~
+    * func to show usage over the last two weeks.
 
 BACKLOG
 * if you run it and everything is already commented, maybe uncomment at the end? Might arleady do this...
 * allow enabling multiple regexes at once.
+* reset when broken
 * setup venv?
 * convert to python 3
 * write a log of allowed times so that I can collect stats
